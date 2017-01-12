@@ -1,53 +1,71 @@
-<!doctype html>
-<html class="no-js" lang="">
+<!DOCTYPE html>
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Backbone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- <link rel="apple-touch-icon" href="apple-touch-icon.png"> -->
-    <!-- Place favicon.ico in the root directory -->
-
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
-    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- === Styles Twitter Bootstrap -->
+    <!--V 3.0.1 ...-->
+    <link href="css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="css/vendor/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
 </head>
 
 <body>
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-    <p>Hello world! </p>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <div class="container">
+                <a class="navbar-brand">Mon Blog</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="jumbotron">
+            <h1>Mon blog</h1>
+            <p>
+                Voici mes articles !
+            </p>
+        </div>
+
+        <div id="articles_box">
+
+            <h1 id="current_articles_title">Articles</h1>
+
+            <ul id="current_articles_list">
+                <li>Backbone et les modèles</li>
+                <li>Backbone et les vues</li>
+                <li>Backbone : mais y a-t-il vraiment un contrôleur dans l'avion ?</li>
+            </ul>
+
+            <h1 id="next_articles_title">A venir</h1>
+
+            <ul id="next_articles_list">
+                <li>Backbone et le localstorage</li>
+                <li>Backbone.sync : comment ça marche</li>
+            </ul>
+        </div>
+    </div>
 
 
     <div id="container">Loading...!</div>
+
+    <a href="#route1">Route1 </a>
+    <a href="#route2">Route2 </a>
+    <a href="#route3">Route3 </a>
 
     <script src="js/vendor/jquery.min.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
     <script src="js/vendor/backbone-min.js"></script>
     <script src="js/plugins.js"></script>
     <script src="js/main.js"></script>
-    <script>
-        console.log('RENDER 2 !');
-        var AppView = Backbone.View.extend({
-            // el - stands for element. Every view has an element associated with HTML content, will be rendered.
-            el: '#container',
-            // It's the first function called when this view is instantiated.
-            initialize: function() {
-                this.render();
-            },
-            // $el - it's a cached jQuery object (el), in which you can use jQuery functions to push content. Like the Hello TutorialsPoint in this case.
-            render: function() {
-                console.log('RENDER !')
-                this.$el.html("Hello TutorialsPoint!!!");
-            }
-        });
-
-        var appView = new AppView();
-    </script>
 
 </body>
 
