@@ -1,0 +1,18 @@
+http:
+  image: nginx
+  ports:
+  - "80:80"
+  volumes:
+   - ./web/src:/usr/share/nginx/html
+app:
+  build: .
+  volumes:
+     - "./app:/src/app"
+  ports:
+   - "8080:8080"
+  links:
+   - redis
+redis:
+  image: redis:3.0.7-alpine
+  ports:
+   - "6379:6379"

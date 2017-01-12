@@ -1,0 +1,16 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Benoit Maréchal -- Software Architect -- @benoitmarechal
+
+# THANKS
+
+  Caleb Sotelo http://paislee.io/
+  Pascal Cremer  🐱b00giZm
+
+# TECHNOLOGY COLOPHON
+
+    CSS3, HTML5
+    Modernizr, Normalize.css
