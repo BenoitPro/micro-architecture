@@ -15,9 +15,9 @@ ADD app/package.json /src/package.json
 RUN npm install
 
 # Bundle app source (a garder pour le déployement en prod ?)
-#COPY app /src
+# COPY app /src
 # => inutile car monté par le volume lors d'un docker-compose...
-# => a remettre lors d'un docker build / run ... !
+# => a remettre lors d'un docker build / run ...
 ADD app/nodemon.json /src/nodemon.json
 
 EXPOSE 8080
