@@ -28,7 +28,30 @@ var articles = [{
     content: "Content 2"
 }];
 
+// Articles Index
 app.get('/articles/', function(req, res) {
+
+    MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+        if (err) {
+            // TODO return error 500...
+            res.end("ERROR");
+            return console.dir(err);
+        }
+        var articles = db.collection('articles');
+
+        articles.find().toArray(function(err, items) {
+            res.json(items);
+        });
+        // TODO return empty or 404 ...
+        //    res.send('Hello world yeah 4\n');
+        db.close();
+    });
+
+});
+
+// Articles Show
+app.get('/articles/:id', function(req, res) {
+    console.log("GET : /articles/" + req.params.id);
 
     MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
         if (err) {
@@ -38,18 +61,25 @@ app.get('/articles/', function(req, res) {
         }
         var articles = db.collection('articles');
 
-        articles.find().toArray(function(err, items) {
-            res.json(items);
+        var ObjectId = require('mongodb').ObjectID;
+
+        articles.findOne({
+            "_id": new ObjectId(req.params.id)
+        }, function(err, item) {
+            if (err) {
+                // TODO ERR
+                res.end("ERROR");
+            } else
+                res.json(item);
         });
         //    res.send('Hello world yeah 4\n');
         db.close();
     });
 
-});
+    // TODO return empty
+    //res.json(req.params);
 
-app.get('/articles/:id', function(req, res) {
-    console.log("GET : /articles/" + req.params.id);
-    res.json(req.params);
+
     // posts.get(req.params.id, function(err, post, key) {
     //     if (err) {
     //         console.log("Erreur : ", err);
