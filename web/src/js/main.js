@@ -63,9 +63,6 @@ $(document).ready(function() {
         }
     });
 
-
-
-
     // Collection
     app.Articles = Backbone.Collection.extend({
         model: app.Article,
@@ -73,7 +70,6 @@ $(document).ready(function() {
             console.log("Création d'une collection d'articles")
         }
     });
-
 
     /*--- bootstrap ---*/
     app.articles = new app.Articles();
