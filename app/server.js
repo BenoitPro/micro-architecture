@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 const PORT = 8080;
 
 // App
-
 var app = module.exports = express();
 
 app.use(bodyParser.urlencoded({
@@ -50,6 +49,49 @@ app.get('/articles/:id', function(req, res) {
 
 app.listen(PORT);
 console.log('Running on http://localhost:' + PORT);
+
+// MONGO TEST
+// Retrieve
+var MongoClient = require('mongodb').MongoClient;
+
+// Connect to the db
+// Mongo mais du temps a se lancer et la tentative de connection plante
+// car elle est réalisé avant que mongodb soit lancé...
+// Todo Add waiting code for mongo to be ready...
+MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+    if (err) {
+        return console.dir(err);
+    }
+
+    // Get the documents collection
+    var collection = db.collection('articles');
+
+    //Create some users
+    var article1 = {
+        title: "Title 1 from mongo",
+        content: "Content 1"
+    };
+    var article2 = {
+        title: "Title 2 from mongo",
+        content: "Content 2"
+    };
+    var article3 = {
+        title: "Title 3 from mongo",
+        content: "Content 3"
+    };
+
+    // Insert some users
+    collection.insert([article1, article2, article3], function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('I Inserted %d documents into the "articles" collection. The documents inserted with "_id" are:', result.result.n, result);
+        }
+        // Close connection
+        db.close();
+    });
+
+});
 
 // REDIS TEST
 var redis = require("redis"),

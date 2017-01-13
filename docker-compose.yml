@@ -1,18 +1,33 @@
-http:
-  image: nginx
-  ports:
-  - "80:80"
-  volumes:
-   - ./web/src:/usr/share/nginx/html
-app:
-  build: .
-  volumes:
-     - "./app:/src/app"
-  ports:
-   - "8080:8080"
-  links:
-   - redis
-redis:
-  image: redis:3.0.7-alpine
-  ports:
-   - "6379:6379"
+version: "2"
+services:
+  # Front service (http with nginx)
+  http:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./web/src:/usr/share/nginx/html
+
+  # Data service (mongodb)
+  redis:
+    image: redis:3.0.7-alpine
+    ports:
+      - "6379:6379"
+  mongo:
+    image: mongo:3.0
+    ports:
+      - "27017:27017"
+
+  # Backend service (node.js, express)
+  app:
+    build: .
+    volumes:
+      - "./app:/src/app"
+    ports:
+      - "8080:8080"
+    links:
+      - redis
+      - mongo
+    depends_on:
+      - "mongo"
+    # command: ["./wait-for-it.sh", "mongo:27017", "--", "python", "app.py"]
