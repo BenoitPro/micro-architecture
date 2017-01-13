@@ -28,7 +28,7 @@ var articles = [{
     content: "Content 2"
 }];
 
-// Articles Index
+// GET Articles Index
 app.get('/articles/', function(req, res) {
 
     MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
@@ -49,7 +49,7 @@ app.get('/articles/', function(req, res) {
 
 });
 
-// Articles Show
+// GET Articles Show
 app.get('/articles/:id', function(req, res) {
     console.log("GET : /articles/" + req.params.id);
 
@@ -91,6 +91,56 @@ app.get('/articles/:id', function(req, res) {
     //     }
     // });
 });
+
+
+// POST Articles Create
+app.post('/articles/', function(req, res) {
+    console.log("POST : /articles/");
+
+    // Récupération des parametres
+    var article = {
+        // POST body and x-www-form-urlencoded
+        title: req.body.title,
+        content: req.body.content
+    };
+
+    MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+        if (err) {
+            // todo return error 500...
+            res.end("ERROR");
+            return console.dir(err);
+        }
+        var articles = db.collection('articles');
+
+        articles.insert(article, {
+            w: 1
+        }, function(err, articles) {
+            console.log("Record added as ", articles.ops[0]);
+            // TODO http 201.
+            res.json(articles.ops[0]);
+        });
+
+        db.close();
+    });
+
+    // TODO return empty
+    //res.json(req.params);
+
+
+    // posts.get(req.params.id, function(err, post, key) {
+    //     if (err) {
+    //         console.log("Erreur : ", err);
+    //         res.json(err);
+    //
+    //     } else {
+    //         post.id = key;
+    //         res.json(post);
+    //     }
+    // });
+});
+
+
+
 
 app.listen(PORT);
 console.log('Running on http://localhost:' + PORT);
