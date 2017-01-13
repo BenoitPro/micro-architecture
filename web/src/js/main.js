@@ -35,3 +35,27 @@ var router = new Router();
 
 //Start listening to the routes and manages the history for bookmarkable URL's
 Backbone.history.start();
+
+//////////////////////
+
+$(function() {
+    //permettra d'accéder à nos variables en mode console
+    window.blog = {};
+
+    /*--- Modèle article ---*/
+
+    // une "sorte" de classe Article
+    blog.Article = Backbone.Model.extend({
+        //les valeurs par défaut d'un article
+        defaults: {
+            title: "titre de l'article",
+            content: "contenu de l'article",
+            publishedAt: new Date()
+        },
+        // s'exécute à la création d'un article
+        initialize: function() {
+            console.log("Création d'un nouvel article")
+        }
+    });
+
+});
