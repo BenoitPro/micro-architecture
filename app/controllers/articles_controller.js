@@ -16,9 +16,16 @@ db.once('open', function() {
     console.log("Mongoose connection OK");
 });
 
+// Petit middleware pour logguer les requêtes HTTP reçus.
+router.use(function(req, res, next) {
+    console.log(req.method, "/articles" + req.url);
+    next();
+});
+
 // GET Articles
 // Index Action
 router.get('/', function(req, res) {
+
     // Pas de requete donné en paramètres signifie "find everything"
     Article.find(function(err, articles) {
         if (err) {
@@ -48,7 +55,6 @@ router.post('/', function(req, res) {
         } else
             res.json(articleCreated);
     });
-
 });
 
 // GET an Article
@@ -96,5 +102,6 @@ router.delete('/:id', function(req, res) {
     });
 
 });
+
 
 module.exports = router;

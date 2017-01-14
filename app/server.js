@@ -11,16 +11,6 @@ var app = module.exports = express();
 var router = express.Router();
 
 
-// Petit middleware pour logguer les requêtes HTTPs reçus.
-router.use(function(req, res, next) {
-
-    // log each request to the console
-    console.log(req.method, req.url);
-
-    // continue doing what we were doing and go to the route
-    next();
-});
-
 app.use(bodyParser.urlencoded({
     extended: true
 }));
