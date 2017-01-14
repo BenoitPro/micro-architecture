@@ -130,9 +130,7 @@ app.post('/articles/', function(req, res) {
 app.get('/articles/:id', function(req, res) {
     console.log("GET : /articles/" + req.params.id);
     // If query IS passed into .find(), filters by the query parameters
-    Article.findOne({
-        "_id": req.params.id
-    }, function(err, article) {
+    Article.findById(req.params.id, function(err, article) {
         if (err) {
             res.status(500).json(err);
         } else {
