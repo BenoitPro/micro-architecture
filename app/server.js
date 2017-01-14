@@ -38,17 +38,20 @@ var router = require('./controllers/articles_controller');
 app.use('/articles', router);
 
 app.listen(PORT);
-console.log('Running on http://localhost:' + PORT);
+try {
+    console.log('Running on http://' + require('os').networkInterfaces().ethf0[0].address + ":" + PORT);
+} catch (e) {
+    console.log("cannot get server ip");
+}
 
-
+/*
 // REDIS TEST
 var redis = require("redis"),
     client = redis.createClient({
         host: "redis"
     });
 
-// if you'd like to select database 3, instead of 0 (default), call
-// client.select(3, function() { /* ... */ });
+
 
 client.on("error", function(err) {
     console.log("Error " + err);
@@ -64,7 +67,7 @@ client.hkeys("hash key", function(err, replies) {
     });
     client.quit();
 });
-
+*/
 // Apparement inutile...
 // If the Node process ends, close the Mongoose connection
 // process.on('SIGINT', function() {
