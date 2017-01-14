@@ -9,6 +9,7 @@
 
   Caleb Sotelo http://paislee.io/
   Pascal Cremer  🐱b00giZm
+  Chris Sevilleja https://pub.scotch.io/@chris
 
 # TECHNOLOGY COLOPHON
 

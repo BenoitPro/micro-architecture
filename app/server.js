@@ -20,77 +20,63 @@ app.use(bodyParser.json());
 // data
 ////////////////
 
-var articles = [{
-    title: "Tile 1",
-    content: "Content 1"
-}, {
-    title: "Title 2",
-    content: "Content 2"
-}];
+// Connexion à la base de données mongo
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+mongoose.connect('mongodb://mongo/blogdb');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+    // we're connected!
+    console.log("Mongoose connection OK");
+});
+
+var ArticleSchema = new Schema({
+    title: String,
+    content: String,
+    publishedAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+var Article = mongoose.model('Article', ArticleSchema);
+
 
 // GET Articles Index
 app.get('/articles/', function(req, res) {
-
-    MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+    // No query passed in means "find everything"
+    Article.find(function(err, articles) {
         if (err) {
-            // TODO return error 500...
-            res.end("ERROR");
-            return console.dir(err);
+            // Note that this error doesn't mean nothing was found,
+            // it means the database had an error while searching, hence the 500 status
+            res.status(500).send(err);
+        } else {
+            // send the list of all people
+            res.send(articles);
         }
-        var articles = db.collection('articles');
-
-        articles.find().toArray(function(err, items) {
-            res.json(items);
-        });
-        // TODO return empty or 404 ...
-        //    res.send('Hello world yeah 4\n');
-        db.close();
     });
-
-});
-
-// GET Articles Show
-app.get('/articles/:id', function(req, res) {
-    console.log("GET : /articles/" + req.params.id);
-
-    MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
-        if (err) {
-            // todo return error 500...
-            res.end("ERROR");
-            return console.dir(err);
-        }
-        var articles = db.collection('articles');
-
-        var ObjectId = require('mongodb').ObjectID;
-
-        articles.findOne({
-            "_id": new ObjectId(req.params.id)
-        }, function(err, item) {
+    /*
+        MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
             if (err) {
-                // TODO ERR
+                // TODO return error 500...
                 res.end("ERROR");
-            } else
-                res.json(item);
+                return console.dir(err);
+            }
+            var articles = db.collection('articles');
+
+            articles.find().toArray(function(err, items) {
+                res.json(items);
+            });
+            // TODO return empty or 404 ...
+            //    res.send('Hello world yeah 4\n');
+            db.close();
         });
-        //    res.send('Hello world yeah 4\n');
-        db.close();
-    });
-
-    // TODO return empty
-    //res.json(req.params);
-
-
-    // posts.get(req.params.id, function(err, post, key) {
-    //     if (err) {
-    //         console.log("Erreur : ", err);
-    //         res.json(err);
-    //
-    //     } else {
-    //         post.id = key;
-    //         res.json(post);
-    //     }
-    // });
+    */
 });
+
 
 
 // POST Articles Create
@@ -106,7 +92,7 @@ app.post('/articles/', function(req, res) {
 
     MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
         if (err) {
-            // todo return error 500...
+            // TODO return error 500...
             res.end("ERROR");
             return console.dir(err);
         }
@@ -140,6 +126,72 @@ app.post('/articles/', function(req, res) {
 });
 
 
+// GET Articles Show
+app.get('/articles/:id', function(req, res) {
+    console.log("GET : /articles/" + req.params.id);
+    // If query IS passed into .find(), filters by the query parameters
+    Article.findOne({
+        "_id": req.params.id
+    }, function(err, article) {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            // on prend le 1ier
+            if (article) {
+                res.json(article);
+            } else {
+                res.status(404).json({
+                    message: "Not found",
+                    value: req.params.id
+                });
+            }
+        }
+    });
+
+});
+
+// DELETE Articles deletion
+app.delete('/articles/:id', function(req, res) {
+    console.log("DELETE : /articles/");
+
+    // // Récupération des parametres
+    // var article = {
+    //     // POST body and x-www-form-urlencoded
+    //     title: req.body.title,
+    //     content: req.body.content
+    // };
+
+    MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+        if (err) {
+            // TODO return error 500...
+            res.end("ERROR");
+            return console.dir(err);
+        }
+        var articles = db.collection('articles');
+
+
+        articles.findAndRemove({
+            "_id": new ObjectId(req.params.id)
+        }, [
+            ['b', 1]
+        ], function(err, doc) {
+            assert.equal(null, err);
+            assert.equal(1, doc.b);
+            assert.equal(1, doc.d);
+        });
+
+        articles.insert(article, {
+            w: 1
+        }, function(err, articles) {
+            console.log("Record added as ", articles.ops[0]);
+            // TODO http 201.
+            res.json(articles.ops[0]);
+        });
+
+        db.close();
+    });
+
+});
 
 
 app.listen(PORT);
@@ -210,4 +262,13 @@ client.hkeys("hash key", function(err, replies) {
         console.log("    " + i + ": " + reply);
     });
     client.quit();
+});
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', function() {
+    // TODO : Attention peux couper trop tôt la connection lors des tests...
+    mongoose.connection.close(function() {
+        console.log('Mongoose disconnected on app termination');
+        process.exit(0);
+    });
 });
