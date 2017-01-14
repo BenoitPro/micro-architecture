@@ -8,6 +8,18 @@ const PORT = 8080;
 
 // App
 var app = module.exports = express();
+var router = express.Router();
+
+
+// Petit middleware pour logguer les requêtes HTTPs reçus.
+router.use(function(req, res, next) {
+
+    // log each request to the console
+    console.log(req.method, req.url);
+
+    // continue doing what we were doing and go to the route
+    next();
+});
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -22,7 +34,9 @@ app.use(bodyParser.json());
 
 // Connexion à la base de données mongo
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+
+// Model Article
+var Article = require('./models/article');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://mongo/blogdb');
@@ -30,25 +44,13 @@ mongoose.connect('mongodb://mongo/blogdb');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-    // we're connected!
     console.log("Mongoose connection OK");
 });
 
-// Model Article
-var ArticleSchema = new Schema({
-    title: String,
-    content: String,
-    publishedAt: {
-        type: Date,
-        default: Date.now
-    }
-});
-
-var Article = mongoose.model('Article', ArticleSchema);
 
 // GET Articles
 // Index Action
-app.get('/articles/', function(req, res) {
+router.get('/articles/', function(req, res) {
     // Pas de requete donné en paramètres signifie "find everything"
     Article.find(function(err, articles) {
         if (err) {
@@ -62,12 +64,9 @@ app.get('/articles/', function(req, res) {
 
 });
 
-
-
 // POST Articles
 // Create Action
-app.post('/articles/', function(req, res) {
-    console.log("POST : /articles/");
+router.post('/articles/', function(req, res) {
 
     // Récupération des parametres
     var articleParams = {
@@ -87,9 +86,8 @@ app.post('/articles/', function(req, res) {
 
 
 // GET an Article
-// Show Action
-app.get('/articles/:id', function(req, res) {
-    console.log("GET : /articles/" + req.params.id);
+// SHOW Action
+router.get('/articles/:id', function(req, res) {
     Article.findById(req.params.id, function(err, article) {
         if (err) {
             res.status(500).json(err);
@@ -105,14 +103,11 @@ app.get('/articles/:id', function(req, res) {
             }
         }
     });
-
 });
 
 // DELETE Articles
 // DESTROY action
-app.delete('/articles/:id', function(req, res) {
-    console.log("DELETE : /articles/");
-
+router.delete('/articles/:id', function(req, res) {
 
     Article.findByIdAndRemove(req.params.id, function(err, article) {
         if (err) {
@@ -136,6 +131,8 @@ app.delete('/articles/:id', function(req, res) {
 
 });
 
+// apply the routes to our application
+app.use('/', router);
 
 app.listen(PORT);
 console.log('Running on http://localhost:' + PORT);
