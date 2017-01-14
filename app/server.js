@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://mongo/blogdb');
 
 var db = mongoose.connection;
@@ -33,6 +34,7 @@ db.once('open', function() {
     console.log("Mongoose connection OK");
 });
 
+// Model Article
 var ArticleSchema = new Schema({
     title: String,
     content: String,
@@ -43,7 +45,6 @@ var ArticleSchema = new Schema({
 });
 
 var Article = mongoose.model('Article', ArticleSchema);
-
 
 // GET Articles Index
 app.get('/articles/', function(req, res) {
@@ -84,30 +85,40 @@ app.post('/articles/', function(req, res) {
     console.log("POST : /articles/");
 
     // Récupération des parametres
-    var article = {
+    var articleParams = {
         // POST body and x-www-form-urlencoded
         title: req.body.title,
         content: req.body.content
     };
-
-    MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+    var article = new Article(articleParams);
+    article.save(function(err, articleCreated) {
         if (err) {
-            // TODO return error 500...
-            res.end("ERROR");
-            return console.dir(err);
+            res.status(500).json(err);
         }
-        var articles = db.collection('articles');
-
-        articles.insert(article, {
-            w: 1
-        }, function(err, articles) {
-            console.log("Record added as ", articles.ops[0]);
-            // TODO http 201.
-            res.json(articles.ops[0]);
-        });
-
-        db.close();
+        // This createdTodoObject is the same one we saved, but after Mongo
+        // added its additional properties like _id.
+        else
+            res.json(articleCreated);
     });
+    //
+    // MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+    //     if (err) {
+    //         // TODO return error 500...
+    //         res.end("ERROR");
+    //         return console.dir(err);
+    //     }
+    //     var articles = db.collection('articles');
+    //
+    //     articles.insert(article, {
+    //         w: 1
+    //     }, function(err, articles) {
+    //         console.log("Record added as ", articles.ops[0]);
+    //         // TODO http 201.
+    //         res.json(articles.ops[0]);
+    //     });
+    //
+    //     db.close();
+    // });
 
     // TODO return empty
     //res.json(req.params);
@@ -129,13 +140,12 @@ app.post('/articles/', function(req, res) {
 // GET Articles Show
 app.get('/articles/:id', function(req, res) {
     console.log("GET : /articles/" + req.params.id);
-    // If query IS passed into .find(), filters by the query parameters
     Article.findById(req.params.id, function(err, article) {
         if (err) {
             res.status(500).json(err);
         } else {
-            // on prend le 1ier
             if (article) {
+                // Définit pour nous l'header de la réponse HTTP "Content-Type" à "application/json"
                 res.json(article);
             } else {
                 res.status(404).json({
@@ -152,41 +162,25 @@ app.get('/articles/:id', function(req, res) {
 app.delete('/articles/:id', function(req, res) {
     console.log("DELETE : /articles/");
 
-    // // Récupération des parametres
-    // var article = {
-    //     // POST body and x-www-form-urlencoded
-    //     title: req.body.title,
-    //     content: req.body.content
-    // };
 
-    MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
+    Article.findByIdAndRemove(req.params.id, function(err, article) {
         if (err) {
-            // TODO return error 500...
-            res.end("ERROR");
-            return console.dir(err);
+            res.status(500).json(err);
+        } else {
+            if (article) {
+                var response = {
+                    message: "Article successfully deleted",
+                    id: article._id,
+                    article: article
+                };
+                res.json(response);
+            } else {
+                res.status(404).json({
+                    message: "Not Found",
+                    value: req.params.id
+                });
+            }
         }
-        var articles = db.collection('articles');
-
-
-        articles.findAndRemove({
-            "_id": new ObjectId(req.params.id)
-        }, [
-            ['b', 1]
-        ], function(err, doc) {
-            assert.equal(null, err);
-            assert.equal(1, doc.b);
-            assert.equal(1, doc.d);
-        });
-
-        articles.insert(article, {
-            w: 1
-        }, function(err, articles) {
-            console.log("Record added as ", articles.ops[0]);
-            // TODO http 201.
-            res.json(articles.ops[0]);
-        });
-
-        db.close();
     });
 
 });
@@ -262,11 +256,12 @@ client.hkeys("hash key", function(err, replies) {
     client.quit();
 });
 
+// Apparement inutile...
 // If the Node process ends, close the Mongoose connection
-process.on('SIGINT', function() {
-    // TODO : Attention peux couper trop tôt la connection lors des tests...
-    mongoose.connection.close(function() {
-        console.log('Mongoose disconnected on app termination');
-        process.exit(0);
-    });
-});
+// process.on('SIGINT', function() {
+//     // TODO : Attention peux couper trop tôt la connection lors des tests...
+//     mongoose.connection.close(function() {
+//         console.log('Mongoose disconnected on app termination');
+//         process.exit(0);
+//     });
+// });
