@@ -46,7 +46,8 @@ var ArticleSchema = new Schema({
 
 var Article = mongoose.model('Article', ArticleSchema);
 
-// GET Articles Index
+// GET Articles
+// Index Action
 app.get('/articles/', function(req, res) {
     // No query passed in means "find everything"
     Article.find(function(err, articles) {
@@ -80,7 +81,8 @@ app.get('/articles/', function(req, res) {
 
 
 
-// POST Articles Create
+// POST Articles
+// Create Action
 app.post('/articles/', function(req, res) {
     console.log("POST : /articles/");
 
@@ -137,7 +139,8 @@ app.post('/articles/', function(req, res) {
 });
 
 
-// GET Articles Show
+// GET an Article
+// Show Action
 app.get('/articles/:id', function(req, res) {
     console.log("GET : /articles/" + req.params.id);
     Article.findById(req.params.id, function(err, article) {
@@ -158,7 +161,8 @@ app.get('/articles/:id', function(req, res) {
 
 });
 
-// DELETE Articles deletion
+// DELETE Articles
+// DESTROY action
 app.delete('/articles/:id', function(req, res) {
     console.log("DELETE : /articles/");
 
