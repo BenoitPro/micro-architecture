@@ -49,34 +49,17 @@ var Article = mongoose.model('Article', ArticleSchema);
 // GET Articles
 // Index Action
 app.get('/articles/', function(req, res) {
-    // No query passed in means "find everything"
+    // Pas de requete donné en paramètres signifie "find everything"
     Article.find(function(err, articles) {
         if (err) {
-            // Note that this error doesn't mean nothing was found,
-            // it means the database had an error while searching, hence the 500 status
+            // Renvoye d'une erreur HTTP 500 si un pb avec la bd à au lieu
             res.status(500).send(err);
         } else {
             // send the list of all people
             res.send(articles);
         }
     });
-    /*
-        MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
-            if (err) {
-                // TODO return error 500...
-                res.end("ERROR");
-                return console.dir(err);
-            }
-            var articles = db.collection('articles');
 
-            articles.find().toArray(function(err, items) {
-                res.json(items);
-            });
-            // TODO return empty or 404 ...
-            //    res.send('Hello world yeah 4\n');
-            db.close();
-        });
-    */
 });
 
 
@@ -96,46 +79,10 @@ app.post('/articles/', function(req, res) {
     article.save(function(err, articleCreated) {
         if (err) {
             res.status(500).json(err);
-        }
-        // This createdTodoObject is the same one we saved, but after Mongo
-        // added its additional properties like _id.
-        else
+        } else
             res.json(articleCreated);
     });
-    //
-    // MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
-    //     if (err) {
-    //         // TODO return error 500...
-    //         res.end("ERROR");
-    //         return console.dir(err);
-    //     }
-    //     var articles = db.collection('articles');
-    //
-    //     articles.insert(article, {
-    //         w: 1
-    //     }, function(err, articles) {
-    //         console.log("Record added as ", articles.ops[0]);
-    //         // TODO http 201.
-    //         res.json(articles.ops[0]);
-    //     });
-    //
-    //     db.close();
-    // });
 
-    // TODO return empty
-    //res.json(req.params);
-
-
-    // posts.get(req.params.id, function(err, post, key) {
-    //     if (err) {
-    //         console.log("Erreur : ", err);
-    //         res.json(err);
-    //
-    //     } else {
-    //         post.id = key;
-    //         res.json(post);
-    //     }
-    // });
 });
 
 
@@ -193,48 +140,6 @@ app.delete('/articles/:id', function(req, res) {
 app.listen(PORT);
 console.log('Running on http://localhost:' + PORT);
 
-// MONGO TEST
-// Retrieve
-var MongoClient = require('mongodb').MongoClient;
-
-// Connect to the db
-// Mongo mais du temps a se lancer et la tentative de connection plante
-// car elle est réalisé avant que mongodb soit lancé...
-// Todo Add waiting code for mongo to be ready...
-// MongoClient.connect("mongodb://mongo:27017/blogdb", function(err, db) {
-//     if (err) {
-//         return console.dir(err);
-//     }
-//
-//     // Get the documents collection
-//     var collection = db.collection('articles');
-//
-//     //Create some users
-//     var article1 = {
-//         title: "Title 1 from mongo",
-//         content: "Content 1"
-//     };
-//     var article2 = {
-//         title: "Title 2 from mongo",
-//         content: "Content 2"
-//     };
-//     var article3 = {
-//         title: "Title 3 from mongo",
-//         content: "Content 3"
-//     };
-//
-//     // Insert some users
-//     collection.insert([article1, article2, article3], function(err, result) {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             console.log('I Inserted %d documents into the "articles" collection. The documents inserted with "_id" are:', result.result.n, result);
-//         }
-//         // Close connection
-//         db.close();
-//     });
-//
-// });
 
 // REDIS TEST
 var redis = require("redis"),

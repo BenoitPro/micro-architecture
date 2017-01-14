@@ -10,6 +10,7 @@
   Caleb Sotelo http://paislee.io/
   Pascal Cremer  🐱b00giZm
   Chris Sevilleja https://pub.scotch.io/@chris
+  Bob Ziroll http://coursework.vschool.io/author/bob/
 
 # TECHNOLOGY COLOPHON
 
