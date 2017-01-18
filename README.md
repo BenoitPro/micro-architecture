@@ -4,13 +4,15 @@ La stack sera également "Full Javascript" (avec du mongodb pour le SGBD NoSQL e
 
 L'idée est de réaliser un squelette d'application web "moderne" en utilisant les dernieres techno à la mode.
 
+Comme vous le savez surement il y a beaucoup de technologies ""à la mode" apparues ces dernières années. Et cela dans toutes les couches applicatives du frontend avec notamment les frameworks JS tel que Angular, React, Backbones etc.
+
 Ce n'est pas parce que votre techno préféré n'a pas été retenu ici quelle n'est pas "moderne". L'effervescence autour des technologies web n'a jamais été aussi forte que ces dernieres années et cela dans toutes les couches applicatives, des bases de données aux frameworks frontend.
 
-Enfin, même si ce n'est pas parce qu'une techno est à la mode qu'elle est bonne, l'inverse est également vrai : Ce n'est pas parce qu'une techno est à la mode qu'elle est mauvaise. Le choix de technologies est spécifique à chaque projet et doit correspondre a de multiple critères
+Enfin, même si ce n'est pas parce qu'une techno est à la mode qu'elle est bonne, l'inverse est également vrai : Ce n'est pas parce qu'une techno est à la mode qu'elle est mauvaise. Le choix de technologies est spécifique à chaque projet et doit correspondre a de multiple critères.
 
 On va clairement séparer les rôles suivant :
 
-* Frontend : Une webapp MVC tournera avec Backbones.js + React JS (mais aussi Bootstrap et SASS pour la couche CSS)
+* Frontend : Une webapp MVC tournera avec Backbones.js + React JS (mais aussi Bootstrap et SASS pour la présentation CSS)
 * Backend : Une API Rest MVC fonctionnera sous Node.js + Express
 * Data : La base de données sera gérée en NoSQL par MongoDB.
 * Sysadmin : L'administration system reposera sur des Microservices gérer par Docker.

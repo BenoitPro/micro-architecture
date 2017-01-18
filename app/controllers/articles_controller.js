@@ -22,6 +22,12 @@ router.use(function(req, res, next) {
     next();
 });
 
+// Petit middleware pour ajouter l'header HTTP Access-Control-Allow-Origin.
+router.use(function(req, res, next) {
+    res.set('Access-Control-Allow-Origin', '*');
+    next();
+});
+
 // GET Articles
 // Index Action
 router.get('/', function(req, res) {

@@ -25,11 +25,13 @@ app.use(bodyParser.json());
 // apply the routes to our application
 
 var router = require('./controllers/articles_controller');
+
 app.use('/articles', router);
 
 app.listen(PORT);
 try {
-    console.log('Running on http://' + require('os').networkInterfaces().ethf0[0].address + ":" + PORT);
+    console.log('Server Running on port ' + PORT);
+    console.log("Network Interfaces", require('os').networkInterfaces());
 } catch (e) {
     console.log("cannot get server ip");
 }
