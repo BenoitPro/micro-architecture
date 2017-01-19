@@ -16,9 +16,9 @@ db.once('open', function() {
     console.log("Mongoose connection OK");
 });
 
-// Petit middleware pour logguer les requêtes HTTP reçus.
+// Petit middleware pour logguer les requêtes HTTP reçus
 router.use(function(req, res, next) {
-    console.log(req.method, "/articles" + req.url);
+    console.log(req.method, "/articles" + req.url, "params", req.params);
     next();
 });
 
@@ -39,7 +39,7 @@ router.get('/', function(req, res) {
             res.status(500).send(err);
         } else {
             // send the list of all people
-            res.send(articles);
+            res.jsonp(articles);
         }
     });
 });
@@ -57,9 +57,9 @@ router.post('/', function(req, res) {
     var article = new Article(articleParams);
     article.save(function(err, articleCreated) {
         if (err) {
-            res.status(500).json(err);
+            res.status(500).jsonp(err);
         } else
-            res.json(articleCreated);
+            res.jsonp(articleCreated);
     });
 });
 
@@ -68,13 +68,13 @@ router.post('/', function(req, res) {
 router.get('/:id', function(req, res) {
     Article.findById(req.params.id, function(err, article) {
         if (err) {
-            res.status(500).json(err);
+            res.status(500).jsonp(err);
         } else {
             if (article) {
-                // Définit pour nous l'header de la réponse HTTP "Content-Type" à "application/json"
-                res.json(article);
+                // Définit pour nous l'header de la réponse HTTP "Content-Type" à "application/jsonp"
+                res.jsonp(article);
             } else {
-                res.status(404).json({
+                res.status(404).jsonp({
                     message: "Not found",
                     value: req.params.id
                 });
@@ -89,7 +89,7 @@ router.delete('/:id', function(req, res) {
 
     Article.findByIdAndRemove(req.params.id, function(err, article) {
         if (err) {
-            res.status(500).json(err);
+            res.status(500).jsonp(err);
         } else {
             if (article) {
                 var response = {
@@ -97,9 +97,9 @@ router.delete('/:id', function(req, res) {
                     id: article._id,
                     article: article
                 };
-                res.json(response);
+                res.jsonp(response);
             } else {
-                res.status(404).json({
+                res.status(404).jsonp({
                     message: "Not Found",
                     value: req.params.id
                 });
