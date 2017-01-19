@@ -17,6 +17,30 @@
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+    <script type="text/template" id="blog_sidebar_template">
+        <h2>Les 3 derniers :</h2>
+        <ul>
+            <% _.each(articles ,function(article){ %>
+                <li>
+                    <%= article.get("title") %>
+                </li>
+                <% }); %>
+        </ul>
+    </script>
+
+    <!-- ici notre template -->
+    <script type="text/template" id="articles-tpl">
+
+        <% _.each(articles, function(article) { %>
+            <h1><%= article.title %></h1>
+            <h6><%= article.publishedAt %></h6>
+            <p>
+                <%= article.content %>
+            </p>
+            <% }); %>
+
+    </script>
+
 
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-header">
@@ -27,37 +51,38 @@
     </div>
 
     <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sidebar" id="blog_sidebar">
+                </div>
+            </div>
 
-        <div class="jumbotron">
-            <h1>Mon blog</h1>
-            <p>
-                Voici mes articles !
-            </p>
+            <div class="col-md-9">
+                <div class="jumbotron">
+                    <h1>Backbone rocks !</h1>
+                </div>
+
+                <div class="jumbotron">
+                    <h1>Mon blog</h1>
+                    <p>
+                        Voici mes articles !
+                    </p>
+                </div>
+
+                <!-- les données seront affichées ici -->
+                <div id="articles-container"></div>
+
+            </div>
+
         </div>
-
-        <!-- ici notre template -->
-        <script type="text/template" id="articles-tpl">
-
-            <% _.each(articles, function(article) { %>
-                <h1><%= article.title %></h1>
-                <h6><%= article.publishedAt %></h6>
-                <p>
-                    <%= article.content %>
-                </p>
-                <% }); %>
-
-        </script>
-        <!-- les données seront affichées ici -->
-        <div id="articles-container"></div>
-
     </div>
 
 
     <div id="container">Loading...!</div>
 
-    <a href="#route1">Route1 </a>
-    <a href="#route2">Route2 </a>
-    <a href="#route3">Route3 </a>
+    <a href="#route1">Route1</a>
+    <a href="#route2">Route2</a>
+    <a href="#route3">Route3</a>
 
     <script src="js/vendor/jquery.min.js"></script>
     <script src="js/vendor/underscore-min.js"></script>

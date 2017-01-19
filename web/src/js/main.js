@@ -39,7 +39,6 @@ Backbone.history.start();
 //////////////////////
 $(document).ready(function() {
     console.log("ready 8!");
-    console.log("window.blog", "window.blog");
 
     // Permet d'accéder à nos variables en mode console
     window.app = {};
@@ -73,7 +72,7 @@ $(document).ready(function() {
             // publishedAt: new Date()
 
         },
-        idAttribute: "_id",
+        idAttribute: "_id", // l'id en mongodb
         // s'exécute à la création d'un article
         initialize: function() {
             console.log("Création d'un nouvel article");
@@ -111,26 +110,26 @@ $(document).ready(function() {
         }
     });
 
-    app.abc = new app.Article({
-        _id: "5878dbb839909e00f962c368"
-    });
-    console.log("abc id ", app.abc.get("id"));
-    console.log("abc new? ", app.abc.isNew());
-    app.abc.fetch({
-        success: function(result) {
-            console.log("abc", app.abc);
-            console.log("abc title", app.abc.get("title"));
-        }
-    });
+    // app.abc = new app.Article({
+    //     _id: "5878dbb839909e00f962c368"
+    // });
+    // console.log("abc id ", app.abc.get("id"));
+    // console.log("abc new? ", app.abc.isNew());
+    // app.abc.fetch({
+    //     success: function(result) {
+    //         console.log("abc", app.abc);
+    //         console.log("abc title", app.abc.get("title"));
+    //     }
+    // });
 
     app.articles = new app.Articles();
     app.articles.fetch({
         success: function(collection, response, options) {
-            console.log(collection);
-            console.log(response);
-            console.log(options);
+            // console.log(collection);
+            // console.log(response);
+            // console.log(options);
 
-            console.log("FIRST", app.articles);
+            console.log("app.articles", app.articles);
         },
         error: function(collection, response, options) {
             console.log(response.statusText);
@@ -140,35 +139,77 @@ $(document).ready(function() {
     });
 
 
+    //
+    //  View
+    //
 
-    /*--- Vues ---*/
+    // Articles View
     app.ArticlesView = Backbone.View.extend({
         el: $("#articles-container"),
 
         initialize: function() {
             this.template = _.template($("#articles-tpl").html());
 
-            /*--- binding ---*/
-            _.bindAll(this, 'render');
-
-            this.collection.bind('change', this.render);
-            this.collection.bind('add', this.render);
-            this.collection.bind('remove', this.render);
-            /*---------------*/
+            // Fait dans mainView
+            // _.bindAll(this, 'render');
+            //
+            // this.collection.bind('change', this.render);
+            // this.collection.bind('add', this.render);
+            // this.collection.bind('remove', this.render);
         },
 
         render: function() {
             var renderedContent = this.template({
                 articles: this.collection.toJSON()
             });
-            $(this.el).html(renderedContent);
+            this.$el.html(renderedContent);
             return this;
         }
     });
 
-    articlesView = new app.ArticlesView({
+    app.SidebarView = Backbone.View.extend({
+        el: $("#blog_sidebar"),
+        initialize: function() {
+            this.template = _.template($("#blog_sidebar_template").html());
+        },
+        render: function() {
+            var renderedContent = this.template({
+                articles: _.first(this.collection.models, 3)
+            });
+            this.$el.html(renderedContent);
+            return this;
+        }
+    });
+
+    var articlesView = new app.ArticlesView({
         collection: app.articles
     });
-    articlesView.render();
+    var sidebarView = new app.SidebarView({
+        collection: app.articles
+    });
+    // articlesView.render();
+
+    app.MainView = Backbone.View.extend({
+        initialize: function() {
+            _.bindAll(this, 'render');
+            this.collection.bind('reset', this.render);
+            this.collection.bind('change', this.render);
+            this.collection.bind('add', this.render);
+            this.collection.bind('remove', this.render);
+
+            this.sidebarView = sidebarView;
+            this.articlesView = articlesView;
+
+        },
+        render: function() {
+            // this.sidebarView.collection = ;
+            this.sidebarView.render();
+            this.articlesView.render();
+        }
+    });
+    var mainView = new app.MainView({
+        collection: app.articles
+    });
+
 
 });
