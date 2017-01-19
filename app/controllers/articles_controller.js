@@ -22,11 +22,14 @@ router.use(function(req, res, next) {
     next();
 });
 
-// Petit middleware pour ajouter l'header HTTP Access-Control-Allow-Origin.
+// Petit middleware pour ajouter le nécessaire à une API REST
 router.use(function(req, res, next) {
-    res.set('Access-Control-Allow-Origin', '*');
-    // Pour les requetes POST par Backbone.js
+    // Aurotiser l'appel a cette API par des applications externe
+    // hebergées ailleurs ou par des applications natives type ios, android, desktop etc.
+    res.header('Access-Control-Allow-Origin', '*');
+    // Autoriser notamment le choix par le client du Content-Type à renvoyer par le serveur
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    // Autoriser notamment les "Methods" (verbe) HTTP  PUT et DELETE
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 
     next();
