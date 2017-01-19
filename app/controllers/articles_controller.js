@@ -24,7 +24,7 @@ router.use(function(req, res, next) {
 
 // Petit middleware pour ajouter le nécessaire à une API REST
 router.use(function(req, res, next) {
-    // Aurotiser l'appel a cette API par des applications externe
+    // Aurotiser l'appel à cette API par des applications externe
     // hebergées ailleurs ou par des applications natives type ios, android, desktop etc.
     res.header('Access-Control-Allow-Origin', '*');
     // Autoriser notamment le choix par le client du Content-Type à renvoyer par le serveur
