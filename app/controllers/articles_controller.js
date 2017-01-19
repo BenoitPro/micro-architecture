@@ -27,6 +27,7 @@ router.use(function(req, res, next) {
     res.set('Access-Control-Allow-Origin', '*');
     // Pour les requetes POST par Backbone.js
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 
     next();
 });
