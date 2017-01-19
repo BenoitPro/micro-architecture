@@ -38,26 +38,27 @@ Backbone.history.start();
 
 //////////////////////
 $(document).ready(function() {
-    console.log("ready 7!");
+    console.log("ready 8!");
     console.log("window.blog", "window.blog");
 
     // Permet d'accéder à nos variables en mode console
     window.app = {};
 
     // BACKBONE SYNC
+    // POST need
 
-    // var proxiedSync = Backbone.sync;
-    // Backbone.sync = function(method, model, options) {
-    //     options || (options = {});
-    //     if (!options.crossDomain) {
-    //         options.crossDomain = true;
-    //     }
-    //     console.log("Backbone.sync options.crossDomain", options.crossDomain);
-    //     //  if (!options.xhrFields) {
-    //     //    options.xhrFields = {withCredentials:true};
-    //     //  }
-    //     return proxiedSync(method, model, options);
-    // };
+    var proxiedSync = Backbone.sync;
+    Backbone.sync = function(method, model, options) {
+        options || (options = {});
+        if (!options.crossDomain) {
+            options.crossDomain = true;
+        }
+        console.log("Backbone.sync options.crossDomain", options.crossDomain);
+        //  if (!options.xhrFields) {
+        //    options.xhrFields = {withCredentials:true};
+        //  }
+        return proxiedSync(method, model, options);
+    };
 
     /*--- Modèle article ---*/
 
@@ -66,12 +67,12 @@ $(document).ready(function() {
 
         urlRoot: "http://0.0.0.0:8080/articles",
         // // les valeurs par défaut d'un article
-        // defaults: {
-        //     title: "titre de l'article",
-        //     content: "contenu de l'article",
-        //     // publishedAt: new Date()
-        //
-        // },
+        defaults: {
+            title: "titre de l'article",
+            content: "contenu de l'article",
+            // publishedAt: new Date()
+
+        },
         idAttribute: "_id",
         // s'exécute à la création d'un article
         initialize: function() {
@@ -80,7 +81,7 @@ $(document).ready(function() {
             this.set("publishedAt", new Date());
         },
         sync: function(method, collection, options) {
-            options.dataType = "jsonp";
+            // options.dataType = "jsonp";
             return Backbone.sync(method, collection, options);
         }
     });
@@ -122,15 +123,6 @@ $(document).ready(function() {
         }
     });
 
-    //
-    // console.log("FETCH ALL");
-    // app.Articles.all().fetch({
-    //     success: function(result) {
-    //         console.log(result);
-    //     }
-    // });
-
-    /*--- bootstrap ---*/
     app.articles = new app.Articles();
     app.articles.fetch({
         success: function(collection, response, options) {
@@ -147,26 +139,7 @@ $(document).ready(function() {
         timeout: 5000
     });
 
-    app.articles.add(new app.Article({
-        title: "titre1",
-        content: "contenu1"
-    }));
-    app.articles.add(new app.Article({
-        title: "titre2",
-        content: "contenu2"
-    }));
-    app.articles.add(new app.Article({
-        title: "titre3",
-        content: "contenu3"
-    }));
-    app.articles.add(new app.Article({
-        title: "titre4",
-        content: "contenu4"
-    }));
-    app.articles.add(new app.Article({
-        title: "titre5",
-        content: "contenu5"
-    }));
+
 
     /*--- Vues ---*/
     app.ArticlesView = Backbone.View.extend({

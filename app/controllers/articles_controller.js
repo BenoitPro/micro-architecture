@@ -25,6 +25,9 @@ router.use(function(req, res, next) {
 // Petit middleware pour ajouter l'header HTTP Access-Control-Allow-Origin.
 router.use(function(req, res, next) {
     res.set('Access-Control-Allow-Origin', '*');
+    // Pour les requetes POST par Backbone.js
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
     next();
 });
 
@@ -48,6 +51,7 @@ router.get('/', function(req, res) {
 // Create Action
 router.post('/', function(req, res) {
 
+    console.log("POST params req.body", req.body);
     // Récupération des parametres
     var articleParams = {
         // POST body and x-www-form-urlencoded
