@@ -187,7 +187,6 @@ $(document).ready(function() {
     var sidebarView = new app.SidebarView({
         collection: app.articles
     });
-    // articlesView.render();
 
     app.MainView = Backbone.View.extend({
         initialize: function() {
@@ -201,13 +200,21 @@ $(document).ready(function() {
             this.articlesView = articlesView;
 
         },
+        events: {
+            "keydown": "ttt",
+            "click .btn-danger": "ttt"
+        },
         render: function() {
-            // this.sidebarView.collection = ;
             this.sidebarView.render();
             this.articlesView.render();
+            this.articlesView.delegateEvents(); // rebind event
+        },
+        ttt: function() {
+            console.log("CLICKED !");
         }
     });
     var mainView = new app.MainView({
+        el: $("#main"),
         collection: app.articles
     });
 
