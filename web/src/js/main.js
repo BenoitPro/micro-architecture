@@ -201,16 +201,32 @@ $(document).ready(function() {
 
         },
         events: {
-            "keydown": "ttt",
-            "click .btn-danger": "ttt"
+            // TODO a mettre dans articleview
+            "click .btn-danger": "articleDestroy"
         },
         render: function() {
             this.sidebarView.render();
             this.articlesView.render();
-            this.articlesView.delegateEvents(); // rebind event
+            //this.articlesView.delegateEvents(); // rebind event
         },
-        ttt: function() {
-            console.log("CLICKED !");
+        // TODO a mettre dans articleview
+        articleDestroy: function(e) {
+            console.log("ID CLICKED: " + $(e.target).attr("data-id"));
+            var article = new app.Article({
+                _id: $(e.target).attr("data-id")
+            });
+            article.destroy({
+                success: function(a) {
+                    console.log("destroyed title", a.get("title"));
+
+                }
+            });
+            // article.fetch({
+            //     success: function(a) {
+            //         console.log("this title", a.get("title"));
+            //
+            //     }
+            // });
         }
     });
     var mainView = new app.MainView({
