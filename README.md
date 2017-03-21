@@ -6,9 +6,9 @@ L'idée est de réaliser un squelette d'application web "moderne" en utilisant l
 
 Comme vous le savez surement il y a beaucoup de technologies ""à la mode" apparues ces dernières années. Et cela dans toutes les couches applicatives du frontend avec notamment les frameworks JS tel que Angular, React, Backbones etc.
 
-Ce n'est pas parce que votre techno préféré n'a pas été retenu ici quelle n'est pas "moderne". L'effervescence autour des technologies web n'a jamais été aussi forte que ces dernieres années et cela dans toutes les couches applicatives, des bases de données aux frameworks frontend.
+Ce n'est pas parce que votre techno préférée n'a pas été retenue ici qu'elle n'est pas "moderne". L'effervescence autour des technologies web n'a jamais été aussi forte que ces dernieres années et cela dans toutes les couches applicatives.
 
-Enfin, même si ce n'est pas parce qu'une techno est à la mode qu'elle est bonne, l'inverse est également vrai : Ce n'est pas parce qu'une techno est à la mode qu'elle est mauvaise. Le choix de technologies est spécifique à chaque projet et doit correspondre à de multiple critères.
+Enfin, même si ce n'est pas parce qu'une techno est à la mode qu'elle est bonne, l'inverse est également vrai : Ce n'est pas parce qu'une techno est à la mode qu'elle est mauvaise. Le choix de technologies est spécifique à chaque projet et doit répondre à de multiple critères.
 
 On va clairement séparer les rôles suivant :
 
